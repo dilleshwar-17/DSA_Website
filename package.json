@@ -1,0 +1,12 @@
+{
+  "name": "dsa-platform",
+  "version": "1.0.0",
+  "scripts": {
+    "deploy": "cd frontend && vercel --prod && cd ../backend && railway up",
+    "deploy:frontend": "cd frontend && vercel --prod",
+    "deploy:backend": "cd backend && railway up",
+    "deploy:vercel": "cd frontend && vercel --prod",
+    "deploy:render": "echo Visit https://render.com and deploy backend folder",
+    "deploy:netlify": "cd frontend && netlify deploy --prod"
+  }
+}
