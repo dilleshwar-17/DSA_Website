@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: dsa-platform-api
+    name: datanauts-dsa-api
     env: node
     region: oregon
     plan: free
