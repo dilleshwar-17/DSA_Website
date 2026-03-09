@@ -1,0 +1,6 @@
+# MongoDB
+mongodb-data/
+*.log
+
+# Environment
+.env

@@ -8,10 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dsa-platform', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dsa-platform');
 
 const authRoutes = require('./routes/auth');
 const problemRoutes = require('./routes/problems');
