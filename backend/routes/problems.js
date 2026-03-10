@@ -15,7 +15,8 @@ router.get('/', async (req, res) => {
     const problems = await Problem.find(query).select('-solution -testCases');
     res.json(problems);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('List Problems Error:', error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
   }
 });
 
@@ -28,8 +29,8 @@ router.get('/:id', async (req, res) => {
     }
     res.json(problem);
   } catch (error) {
-    console.error("Error fetching problem:", error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error fetching problem detail:", error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
   }
 });
 

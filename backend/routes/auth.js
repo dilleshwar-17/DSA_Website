@@ -20,7 +20,8 @@ router.post('/register', async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your-secret-key', { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Registration Error:', error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
   }
 });
 
@@ -41,7 +42,8 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your-secret-key', { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Login Error:', error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
   }
 });
 

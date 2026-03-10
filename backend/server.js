@@ -8,7 +8,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_ATLAS_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/dsa-platform');
+const dbUri = process.env.MONGODB_ATLAS_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/dsa-platform';
+console.log(`Connecting to MongoDB... (Atlas URI present: ${!!process.env.MONGODB_ATLAS_URI})`);
+
+mongoose.connect(dbUri)
+  .then(() => console.log('✅ MongoDB Connected successfully'))
+  .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 const authRoutes = require('./routes/auth');
 const problemRoutes = require('./routes/problems');
