@@ -31,7 +31,12 @@ const problemSchema = new mongoose.Schema({
   }],
   acceptanceRate: { type: Number, default: 0 },
   totalSubmissions: { type: Number, default: 0 },
-  acceptedSubmissions: { type: Number, default: 0 }
+  acceptedSubmissions: { type: Number, default: 0 },
+  platformLinks: {
+    leetcode: { type: String, default: '' },
+    hackerrank: { type: String, default: '' },
+    codechef: { type: String, default: '' }
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Problem', problemSchema);

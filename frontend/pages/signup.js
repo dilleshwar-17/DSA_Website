@@ -7,7 +7,6 @@ export default function Signup({ darkMode, toggleDarkMode }) {
   const router = useRouter()
   const [formData, setFormData] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     

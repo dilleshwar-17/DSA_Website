@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Navbar from '../components/ui/Navbar'
+import PlatformSelector from '../components/ui/PlatformSelector'
 
 export default function Problems({ darkMode, toggleDarkMode }) {
   const [problems, setProblems] = useState([])
@@ -78,9 +79,15 @@ export default function Problems({ darkMode, toggleDarkMode }) {
                     </span>
                   </td>
                   <td className="py-3 px-4">
-                    <Link href={`/problem/${problem.id || problem._id}`} className="text-primary hover:underline">
-                      Solve
-                    </Link>
+                    <div className="flex flex-col gap-2">
+                      <Link href={`/problem/${problem.id || problem._id}`} className="text-primary hover:underline font-semibold">
+                        Details & Code
+                      </Link>
+                      <PlatformSelector 
+                        platformLinks={problem.platformLinks || {}} 
+                        topic={problem.category}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}

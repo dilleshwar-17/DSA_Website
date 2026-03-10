@@ -1,9 +1,22 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
+
+// Apply compression middleware to gzip responses
+app.use(compression());
+
+// Apply basic rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 300, // Limit each IP to 300 requests per 10 minutes (generous for 200 mostly sequential users)
+  message: { message: 'Too many requests from this IP, please try again later.' }
+});
+app.use('/api', limiter);
 
 app.use(cors());
 app.use(express.json());

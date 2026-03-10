@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Platform Redirect Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 { color: white; text-align: center; margin-bottom: 30px; font-size: 2.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .global-selector { background: white; padding: 20px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; }
+    .global-selector label { font-weight: bold; margin-right: 10px; font-size: 1.1rem; }
+    .global-selector select { padding: 10px 20px; border-radius: 8px; border: 2px solid #667eea; font-size: 1rem; cursor: pointer; }
+    .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .topic-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s; }
+    .topic-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .topic-card h3 { color: #333; margin-bottom: 15px; font-size: 1.3rem; }
+    .platform-selector { display: flex; gap: 10px; align-items: center; }
+    .platform-dropdown { flex: 1; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 0.95rem; cursor: pointer; }
+    .solve-btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; color: white; cursor: pointer; transition: all 0.3s; text-transform: uppercase; font-size: 0.9rem; }
+    .solve-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .hackerrank { background: #2EC866; }
+    .leetcode { background: #FFA116; }
+    .codechef { background: #5B4638; }
+    .stats { background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    .stats span { margin: 0 15px; font-weight: bold; color: #667eea; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 DSA Practice Platform Redirects</h1>
+    
+    <div class="global-selector">
+      <label for="global-platform">Default Platform:</label>
+      <select id="global-platform">
+        <option value="hackerrank">HackerRank</option>
+        <option value="leetcode" selected>LeetCode</option>
+        <option value="codechef">CodeChef</option>
+      </select>
+    </div>
+
+    <div class="stats">
+      <span>Total Topics: <strong id="topic-count">17</strong></span>
+      <span>Platforms: <strong>3</strong></span>
+      <span>Total Links: <strong>51</strong></span>
+    </div>
+
+    <div class="topics-grid" id="topics-container"></div>
+  </div>
+
+  <script>
+    const platformUrls = {
+      hackerrank: {
+        base: 'https://www.hackerrank.com',
+        paths: {
+          'arrays': '/domains/data-structures/arrays',
+          'strings': '/domains/algorithms/strings',
+          'linked-list': '/domains/data-structures/linked-lists',
+          'stacks': '/domains/data-structures/stacks',
+          'queues': '/domains/data-structures/queues',
+          'trees': '/domains/data-structures/trees',
+          'graphs': '/domains/data-structures/graphs',
+          'dynamic-programming': '/domains/algorithms/dynamic-programming',
+          'sorting': '/domains/algorithms/arrays-and-sorting',
+          'searching': '/domains/algorithms/search',
+          'recursion': '/domains/algorithms/recursion',
+          'hash-tables': '/domains/data-structures/hash-tables',
+          'heaps': '/domains/data-structures/heaps',
+          'greedy': '/domains/algorithms/greedy',
+          'backtracking': '/domains/algorithms/backtracking',
+          'bit-manipulation': '/domains/algorithms/bit-manipulation',
+          'math': '/domains/mathematics'
+        },
+        default: '/search?query='
+      },
+      leetcode: {
+        base: 'https://leetcode.com',
+        paths: {
+          'arrays': '/tag/array/',
+          'strings': '/tag/string/',
+          'linked-list': '/tag/linked-list/',
+          'stacks': '/tag/stack/',
+          'queues': '/tag/queue/',
+          'trees': '/tag/tree/',
+          'graphs': '/tag/graph/',
+          'dynamic-programming': '/tag/dynamic-programming/',
+          'sorting': '/tag/sorting/',
+          'searching': '/tag/binary-search/',
+          'recursion': '/tag/recursion/',
+          'hash-tables': '/tag/hash-table/',
+          'heaps': '/tag/heap/',
+          'greedy': '/tag/greedy/',
+          'backtracking': '/tag/backtracking/',
+          'bit-manipulation': '/tag/bit-manipulation/',
+          'math': '/tag/math/'
+        },
+        default: '/problemset/?search='
+      },
+      codechef: {
+        base: 'https://www.codechef.com',
+        paths: {
+          'arrays': '/tags/problems/array',
+          'strings': '/tags/problems/string',
+          'linked-list': '/tags/problems/linked-list',
+          'stacks': '/tags/problems/stack',
+          'queues': '/tags/problems/queue',
+          'trees': '/tags/problems/tree',
+          'graphs': '/tags/problems/graph',
+          'dynamic-programming': '/tags/problems/dynamic-programming',
+          'sorting': '/tags/problems/sorting',
+          'searching': '/tags/problems/searching',
+          'recursion': '/tags/problems/recursion',
+          'hash-tables': '/tags/problems/hashing',
+          'heaps': '/tags/problems/heap',
+          'greedy': '/tags/problems/greedy',
+          'backtracking': '/tags/problems/backtracking',
+          'bit-manipulation': '/tags/problems/bit-manipulation',
+          'math': '/tags/problems/mathematics'
+        },
+        default: '/problems/?search='
+      }
+    };
+
+    const topics = [
+      { name: 'Arrays', slug: 'arrays' },
+      { name: 'Strings', slug: 'strings' },
+      { name: 'Linked Lists', slug: 'linked-list' },
+      { name: 'Stacks', slug: 'stacks' },
+      { name: 'Queues', slug: 'queues' },
+      { name: 'Trees', slug: 'trees' },
+      { name: 'Graphs', slug: 'graphs' },
+      { name: 'Dynamic Programming', slug: 'dynamic-programming' },
+      { name: 'Sorting', slug: 'sorting' },
+      { name: 'Searching', slug: 'searching' },
+      { name: 'Recursion', slug: 'recursion' },
+      { name: 'Hash Tables', slug: 'hash-tables' },
+      { name: 'Heaps', slug: 'heaps' },
+      { name: 'Greedy', slug: 'greedy' },
+      { name: 'Backtracking', slug: 'backtracking' },
+      { name: 'Bit Manipulation', slug: 'bit-manipulation' },
+      { name: 'Math', slug: 'math' }
+    ];
+
+    function getUrl(platform, topicSlug) {
+      const config = platformUrls[platform];
+      return config.paths[topicSlug] 
+        ? config.base + config.paths[topicSlug]
+        : config.base + config.default + topicSlug;
+    }
+
+    function handleSolve(topicSlug, button) {
+      const card = button.closest('.topic-card');
+      const select = card.querySelector('.platform-dropdown');
+      const platform = select.value;
+      const url = getUrl(platform, topicSlug);
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    function createTopicCard(topic) {
+      return `
+        <div class="topic-card" data-topic="${topic.slug}">
+          <h3>${topic.name}</h3>
+          <div class="platform-selector">
+            <select class="platform-dropdown">
+              <option value="hackerrank">HackerRank</option>
+              <option value="leetcode" selected>LeetCode</option>
+              <option value="codechef">CodeChef</option>
+            </select>
+            <button class="solve-btn leetcode" onclick="handleSolve('${topic.slug}', this)">
+              Solve
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Initialize
+    const container = document.getElementById('topics-container');
+    container.innerHTML = topics.map(createTopicCard).join('');
+
+    // Global platform selector
+    const globalSelect = document.getElementById('global-platform');
+    const savedPlatform = localStorage.getItem('preferredPlatform') || 'leetcode';
+    globalSelect.value = savedPlatform;
+
+    globalSelect.addEventListener('change', (e) => {
+      const platform = e.target.value;
+      localStorage.setItem('preferredPlatform', platform);
+      
+      document.querySelectorAll('.platform-dropdown').forEach(select => {
+        select.value = platform;
+      });
+      
+      document.querySelectorAll('.solve-btn').forEach(btn => {
+        btn.className = `solve-btn ${platform}`;
+      });
+    });
+
+    // Update button colors when dropdown changes
+    document.addEventListener('change', (e) => {
+      if (e.target.classList.contains('platform-dropdown')) {
+        const btn = e.target.parentElement.querySelector('.solve-btn');
+        btn.className = `solve-btn ${e.target.value}`;
+      }
+    });
+
+    // Set initial platform preference
+    document.querySelectorAll('.platform-dropdown').forEach(select => {
+      select.value = savedPlatform;
+    });
+    document.querySelectorAll('.solve-btn').forEach(btn => {
+      btn.className = `solve-btn ${savedPlatform}`;
+    });
+  </script>
+</body>
+</html>

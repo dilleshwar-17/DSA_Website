@@ -1,0 +1,11 @@
+=== Testing Specific Problem Redirection ===
+
+1. Problem with specific links (Two Sum):
+- LeetCode: https://leetcode.com/problems/two-sum/
+- HackerRank: https://www.hackerrank.com/challenges/two-sum/problem
+- CodeChef: https://www.codechef.com/problems/TWOSUM
+
+2. Problem WITHOUT specific links (Fallback to Topic):
+- LeetCode: https://leetcode.com/tag/array/
+- HackerRank: https://www.hackerrank.com/domains/data-structures/arrays
+- CodeChef: https://www.codechef.com/practice?page=0&difficulty=&topics=Arrays&search=
