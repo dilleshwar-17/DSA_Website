@@ -7,7 +7,7 @@ export default function Problems({ darkMode, toggleDarkMode }) {
   const [filter, setFilter] = useState({ category: 'all', difficulty: 'all' })
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/problems')
+    fetch(`/api/problems`)
       .then(res => res.json())
       .then(data => setProblems(data))
       .catch(err => console.error(err))
@@ -60,8 +60,13 @@ export default function Problems({ darkMode, toggleDarkMode }) {
             </thead>
             <tbody>
               {filteredProblems.map(problem => (
-                <tr key={problem.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                  <td className="py-3 px-4">{problem.title}</td>
+                <tr key={problem.id || problem._id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                  <td className="py-4 px-4 w-1/2">
+                    <div className="font-semibold text-lg">{problem.title}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+                      {problem.description}
+                    </div>
+                  </td>
                   <td className="py-3 px-4">{problem.category}</td>
                   <td className="py-3 px-4">
                     <span className={`px-3 py-1 rounded-full text-sm ${
@@ -73,7 +78,7 @@ export default function Problems({ darkMode, toggleDarkMode }) {
                     </span>
                   </td>
                   <td className="py-3 px-4">
-                    <Link href={`/problem/${problem.id}`} className="text-primary hover:underline">
+                    <Link href={`/problem/${problem.id || problem._id}`} className="text-primary hover:underline">
                       Solve
                     </Link>
                   </td>

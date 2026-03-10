@@ -1,0 +1,8 @@
+# Backend Environment Variables (Production)
+MONGODB_ATLAS_URI=mongodb+srv://dsaUser:dsaUser1@cluster1.gfw4cbs.mongodb.net/?appName=Cluster1
+JWT_SECRET=production-secret-123456
+NODE_ENV=production
+RAPIDAPI_KEY=YOUR_JUDGE0_KEY_HERE
+
+# Frontend Environment Variables (Production)
+NEXT_PUBLIC_API_URL=https://your-backend-on-render.onrender.com

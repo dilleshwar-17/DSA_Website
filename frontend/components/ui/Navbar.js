@@ -15,6 +15,7 @@ export default function Navbar({ darkMode, toggleDarkMode }) {
           <div className="hidden md:flex items-center gap-6">
             <Link href="/problems" className="hover:text-primary transition">Problems</Link>
             <Link href="/visualizations" className="hover:text-primary transition">Visualizations</Link>
+            <Link href="/forum" className="hover:text-primary transition">Forum</Link>
             <Link href="/roadmap" className="hover:text-primary transition">Roadmap</Link>
             <Link href="/leaderboard" className="hover:text-primary transition">Leaderboard</Link>
             <button onClick={toggleDarkMode} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -35,6 +36,7 @@ export default function Navbar({ darkMode, toggleDarkMode }) {
           <div className="md:hidden pb-4">
             <Link href="/problems" className="block py-2 hover:text-primary">Problems</Link>
             <Link href="/visualizations" className="block py-2 hover:text-primary">Visualizations</Link>
+            <Link href="/forum" className="block py-2 hover:text-primary">Forum</Link>
             <Link href="/roadmap" className="block py-2 hover:text-primary">Roadmap</Link>
             <Link href="/login" className="block py-2 hover:text-primary">Login</Link>
           </div>

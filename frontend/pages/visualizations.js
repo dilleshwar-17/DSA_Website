@@ -3,6 +3,8 @@ import Navbar from '../components/ui/Navbar'
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer'
 import TreeVisualizer from '../components/visualizations/TreeVisualizer'
 import GraphVisualizer from '../components/visualizations/GraphVisualizer'
+import StackQueueVisualizer from '../components/visualizations/StackQueueVisualizer'
+import DPVisualizer from '../components/visualizations/DPVisualizer'
 
 export default function Visualizations({ darkMode, toggleDarkMode }) {
   const [activeCategory, setActiveCategory] = useState('arrays')
@@ -12,6 +14,7 @@ export default function Visualizations({ darkMode, toggleDarkMode }) {
     arrays: ['bubbleSort', 'binarySearch', 'quickSort', 'mergeSort'],
     trees: ['traversal', 'bst', 'avl'],
     graphs: ['bfs', 'dfs', 'dijkstra', 'topologicalSort'],
+    stackQueue: ['stack', 'queue'],
     dp: ['knapsack', 'lcs', 'lis', 'coinChange']
   }
 
@@ -27,6 +30,8 @@ export default function Visualizations({ darkMode, toggleDarkMode }) {
     dfs: 'Depth First Search',
     dijkstra: 'Dijkstra Algorithm',
     topologicalSort: 'Topological Sort',
+    stack: 'Stack (LIFO Array)',
+    queue: 'Queue (FIFO Array)',
     knapsack: '0/1 Knapsack',
     lcs: 'Longest Common Subsequence',
     lis: 'Longest Increasing Subsequence',
@@ -53,7 +58,7 @@ export default function Visualizations({ darkMode, toggleDarkMode }) {
                       activeCategory === cat ? 'bg-primary text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                   >
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {cat.charAt(0).toUpperCase() + cat.slice(1).replace('Queue', ' / Queue')}
                   </button>
                   
                   {activeCategory === cat && (
@@ -88,14 +93,13 @@ export default function Visualizations({ darkMode, toggleDarkMode }) {
             {activeCategory === 'graphs' && (
               <GraphVisualizer algorithm={activeAlgo} />
             )}
+
+            {activeCategory === 'stackQueue' && (
+              <StackQueueVisualizer type={activeAlgo} />
+            )}
             
             {activeCategory === 'dp' && (
-              <div className="card">
-                <h2 className="text-2xl font-bold mb-4">{algoNames[activeAlgo]}</h2>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Dynamic Programming visualization for {algoNames[activeAlgo]} coming soon...
-                </p>
-              </div>
+               <DPVisualizer algorithm={activeAlgo} />
             )}
           </div>
         </div>

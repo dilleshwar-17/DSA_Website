@@ -18,5 +18,35 @@ export default function App({ Component, pageProps }) {
     localStorage.setItem('darkMode', !darkMode)
   }
 
-  return <Component {...pageProps} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+  useEffect(() => {
+    const handleCopy = (e) => {
+      e.preventDefault()
+      alert("Copying is disabled on this platform.")
+    }
+
+    const handlePaste = (e) => {
+      e.preventDefault()
+      alert("Pasting is disabled. Please type your code.")
+    }
+
+    const handleContextMenu = (e) => {
+      e.preventDefault()
+    }
+
+    document.addEventListener('copy', handleCopy, { capture: true })
+    document.addEventListener('paste', handlePaste, { capture: true })
+    document.addEventListener('contextmenu', handleContextMenu, { capture: true })
+
+    return () => {
+      document.removeEventListener('copy', handleCopy, { capture: true })
+      document.removeEventListener('paste', handlePaste, { capture: true })
+      document.removeEventListener('contextmenu', handleContextMenu, { capture: true })
+    }
+  }, [])
+
+  return (
+    <div onCopyCapture={(e) => e.preventDefault()} onPasteCapture={(e) => e.preventDefault()} onContextMenuCapture={(e) => e.preventDefault()}>
+        <Component {...pageProps} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+    </div>
+  )
 }

@@ -5,7 +5,7 @@ export default function Leaderboard({ darkMode, toggleDarkMode }) {
   const [users, setUsers] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/users/leaderboard')
+    fetch(`/api/users/leaderboard`)
       .then(res => res.json())
       .then(data => setUsers(data))
       .catch(err => console.error(err))
@@ -27,7 +27,7 @@ export default function Leaderboard({ darkMode, toggleDarkMode }) {
                 <th className="text-center py-4 px-4">Easy</th>
                 <th className="text-center py-4 px-4">Medium</th>
                 <th className="text-center py-4 px-4">Hard</th>
-                <th className="text-center py-4 px-4">Total</th>
+                <th className="text-center py-4 px-4">Score</th>
               </tr>
             </thead>
             <tbody>
@@ -60,8 +60,8 @@ export default function Leaderboard({ darkMode, toggleDarkMode }) {
                   <td className="text-center py-4 px-4 text-red-600 font-semibold">
                     {user.progress.hard}
                   </td>
-                  <td className="text-center py-4 px-4 font-bold text-primary">
-                    {user.progress.easy + user.progress.medium + user.progress.hard}
+                  <td className="text-center py-4 px-4 font-bold text-primary text-xl">
+                    {user.performanceScore || 0}
                   </td>
                 </tr>
               ))}

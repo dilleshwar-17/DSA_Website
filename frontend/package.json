@@ -4,25 +4,26 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "share": "node publish-live.js"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
+    "axios": "^1.6.0",
+    "d3": "^7.8.5",
+    "framer-motion": "^10.16.0",
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "framer-motion": "^10.16.0",
-    "d3": "^7.8.5",
-    "@monaco-editor/react": "^4.6.0",
-    "axios": "^1.6.0",
-    "recharts": "^2.10.0",
-    "react-icons": "^4.12.0"
+    "react-icons": "^4.12.0",
+    "recharts": "^2.10.0"
   },
   "devDependencies": {
-    "tailwindcss": "^3.3.0",
-    "postcss": "^8.4.31",
-    "autoprefixer": "^10.4.16",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.0",
     "typescript": "^5.0.0"
   }
 }

@@ -39,8 +39,8 @@ router.post('/save-problem/:problemId', auth, async (req, res) => {
 router.get('/leaderboard', async (req, res) => {
   try {
     const users = await User.find()
-      .select('name avatar progress')
-      .sort({ 'progress.easy': -1, 'progress.medium': -1, 'progress.hard': -1 })
+      .select('name avatar progress performanceScore')
+      .sort({ performanceScore: -1 })
       .limit(100);
     res.json(users);
   } catch (error) {

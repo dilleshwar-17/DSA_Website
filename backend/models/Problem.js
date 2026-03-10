@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const problemSchema = new mongoose.Schema({
+  id: { type: Number, unique: true },
   title: { type: String, required: true },
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], required: true },
   category: { type: String, required: true },

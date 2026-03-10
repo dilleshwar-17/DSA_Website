@@ -32,9 +32,22 @@ router.post('/', auth, async (req, res) => {
     await submission.save();
 
     if (status === 'Accepted') {
+      let scoreEarned = 0;
+      if (problem.difficulty === 'Easy') scoreEarned += 10;
+      if (problem.difficulty === 'Medium') scoreEarned += 20;
+      if (problem.difficulty === 'Hard') scoreEarned += 30;
+      
+      // Speed Bonus
+      if (submission.runtime < 50) scoreEarned += 5;
+      // Memory Bonus
+      if (submission.memory < 20) scoreEarned += 5;
+
       await User.findByIdAndUpdate(req.user.userId, {
         $addToSet: { solvedProblems: problemId },
-        $inc: { [`progress.${problem.difficulty.toLowerCase()}`]: 1 }
+        $inc: { 
+            [`progress.${problem.difficulty.toLowerCase()}`]: 1,
+            performanceScore: scoreEarned 
+        }
       });
     }
 

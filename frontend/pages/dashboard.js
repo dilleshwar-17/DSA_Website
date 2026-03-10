@@ -21,7 +21,7 @@ export default function Dashboard({ darkMode, toggleDarkMode }) {
       return
     }
 
-    fetch('http://localhost:5000/api/users/profile', {
+    fetch(`/api/users/profile`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())

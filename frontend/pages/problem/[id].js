@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import Navbar from '../../components/ui/Navbar'
+import ArrayVisualizer from '../../components/visualizations/ArrayVisualizer'
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false })
 
@@ -16,7 +17,7 @@ export default function ProblemDetail({ darkMode, toggleDarkMode }) {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:5000/api/problems/${id}`)
+      fetch(`/api/problems/${id}`)
         .then(res => res.json())
         .then(data => {
           setProblem(data)
@@ -29,18 +30,43 @@ export default function ProblemDetail({ darkMode, toggleDarkMode }) {
   const handleLanguageChange = (lang) => {
     setLanguage(lang)
     if (problem) {
-      setCode(problem.starterCode[lang] || '')
+      const defaultTemplates = {
+          python: "def solution():\n    pass",
+          java: "class Solution {\n    public static void main(String[] args) {\n        // Test your code here\n        System.out.println(\"Hello Java!\");\n    }\n    \n    public void solve() {\n        \n    }\n}",
+          cpp: "#include <iostream>\nusing namespace std;\n\nclass Solution {\npublic:\n    void solve() {\n        \n    }\n};\n\nint main() {\n    Solution sol;\n    // Test your code here\n    cout << \"Hello C++!\" << endl;\n    return 0;\n}",
+          c: "#include <stdio.h>\n#include <stdlib.h>\n\nvoid solve() {\n    \n}\n\nint main() {\n    // Test your code here\n    printf(\"Hello C!\\n\");\n    return 0;\n}",
+          javascript: "function solve() {\n    \n}\n\n// Test your code here\nconsole.log(\"Hello JavaScript!\");"
+      }
+      setCode(problem.starterCode[lang] || defaultTemplates[lang])
     }
   }
 
-  const runCode = () => {
-    setOutput('Running code...\n\nTest Case 1: Passed ✓\nTest Case 2: Passed ✓\nTest Case 3: Failed ✗\n\nExpected: [0,1]\nGot: [1,0]')
+  const runCode = async () => {
+    setOutput('Running code...');
+    try {
+      const res = await fetch(`/api/execute`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code, language })
+      });
+      const result = await res.json();
+      
+      if (res.ok && !result.error) {
+          setOutput(result.output);
+      } else {
+          setOutput(`Error: ${result.error || result.message || 'Unknown execution error'}`);
+      }
+    } catch (err) {
+      setOutput(`Execution failed: ${err.message}`);
+    }
   }
 
   const submitCode = async () => {
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch('http://localhost:5000/api/submissions', {
+      const res = await fetch(`/api/submissions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,12 +83,30 @@ export default function ProblemDetail({ darkMode, toggleDarkMode }) {
 
   if (!problem) return <div>Loading...</div>
 
+  // Determine which visualization to show based on category or tags
+  const showVisualization = problem.category === 'Arrays' || problem.category === 'Searching' || problem.category === 'Sorting';
+  
+  // Extract a default array from the first test case or example to use in the visualizer
+  let defaultVisArray = [64, 34, 25, 12, 22, 11, 90];
+  if (problem.testCases && problem.testCases[0] && problem.testCases[0].input && problem.testCases[0].input.nums) {
+      defaultVisArray = problem.testCases[0].input.nums;
+  } else if (problem.testCases && problem.testCases[0] && problem.testCases[0].input && problem.testCases[0].input.arr) {
+      defaultVisArray = problem.testCases[0].input.arr;
+  }
+
   return (
     <>
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       
-      <div className="flex h-screen">
-        <div className="w-1/2 overflow-y-auto p-6 border-r dark:border-gray-700">
+      <div 
+        className="flex h-screen"
+        onCopy={(e) => { e.preventDefault(); alert("Copying is disabled on this platform."); }}
+        onPaste={(e) => { e.preventDefault(); alert("Pasting is disabled. Please type your code."); }}
+      >
+        <div 
+          className="w-1/2 overflow-y-auto p-6 border-r dark:border-gray-700 select-none"
+          onContextMenu={(e) => e.preventDefault()}
+        >
           <h1 className="text-3xl font-bold mb-4">{problem.title}</h1>
           
           <div className="flex gap-2 mb-4">
@@ -91,6 +135,14 @@ export default function ProblemDetail({ darkMode, toggleDarkMode }) {
             >
               Hints
             </button>
+            {showVisualization && (
+              <button 
+                onClick={() => setActiveTab('visualization')}
+                className={`pb-2 flex items-center gap-1 ${activeTab === 'visualization' ? 'border-b-2 border-primary text-primary' : ''}`}
+              >
+                <span className="text-xl">✨</span> Visualization
+              </button>
+            )}
           </div>
 
           {activeTab === 'description' && (
@@ -99,7 +151,7 @@ export default function ProblemDetail({ darkMode, toggleDarkMode }) {
               <p className="mb-4">{problem.description}</p>
 
               <h3 className="font-bold mb-2">Examples:</h3>
-              {problem.examples.map((ex, i) => (
+              {problem.examples?.map((ex, i) => (
                 <div key={i} className="bg-gray-100 dark:bg-dark-light p-4 rounded-lg mb-4">
                   <p><strong>Input:</strong> {ex.input}</p>
                   <p><strong>Output:</strong> {ex.output}</p>
@@ -119,11 +171,23 @@ export default function ProblemDetail({ darkMode, toggleDarkMode }) {
           {activeTab === 'hints' && (
             <div>
               <h2 className="text-xl font-bold mb-4">Hints</h2>
-              {problem.hints.map((hint, i) => (
+              {problem.hints?.map((hint, i) => (
                 <div key={i} className="bg-gray-100 dark:bg-dark-light p-4 rounded-lg mb-2">
                   <p><strong>Hint {i + 1}:</strong> {hint}</p>
                 </div>
               ))}
+            </div>
+          )}
+
+          {activeTab === 'visualization' && showVisualization && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500 mb-4">
+                Use this interactive visualization to understand the underlying mechanics before writing your solution.
+              </p>
+              <ArrayVisualizer 
+                algorithm={problem.title.toLowerCase().includes('search') ? 'binarySearch' : 'bubbleSort'} 
+                data={defaultVisArray} 
+              />
             </div>
           )}
         </div>
@@ -138,6 +202,7 @@ export default function ProblemDetail({ darkMode, toggleDarkMode }) {
               <option value="python">Python</option>
               <option value="java">Java</option>
               <option value="cpp">C++</option>
+              <option value="c">C</option>
               <option value="javascript">JavaScript</option>
             </select>
 
@@ -161,6 +226,8 @@ export default function ProblemDetail({ darkMode, toggleDarkMode }) {
               options={{
                 minimap: { enabled: false },
                 fontSize: 14,
+                contextmenu: false,
+                copyWithSyntaxHighlighting: false
               }}
             />
           </div>

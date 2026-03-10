@@ -21,12 +21,14 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const problem = await Problem.findById(req.params.id).select('-solution');
+    // We search by our custom numeric `id` field, not the MongoDB `_id`
+    const problem = await Problem.findOne({ id: Number(req.params.id) }).select('-solution');
     if (!problem) {
       return res.status(404).json({ message: 'Problem not found' });
     }
     res.json(problem);
   } catch (error) {
+    console.error("Error fetching problem:", error);
     res.status(500).json({ message: 'Server error' });
   }
 });

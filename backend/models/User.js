@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     medium: { type: Number, default: 0 },
     hard: { type: Number, default: 0 }
   },
+  performanceScore: { type: Number, default: 0 },
   learningPath: {
     beginner: { completed: { type: Boolean, default: false }, progress: { type: Number, default: 0 } },
     intermediate: { completed: { type: Boolean, default: false }, progress: { type: Number, default: 0 } },

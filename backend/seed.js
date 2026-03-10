@@ -17,17 +17,11 @@ const seedDatabase = async () => {
     const problemsFilePath = path.join(__dirname, 'data', 'problems.json');
     const problemData = JSON.parse(fs.readFileSync(problemsFilePath, 'utf-8'));
 
-    // Remove any 'id' field as MongoDB uses '_id'
-    const formattedData = problemData.map(problem => {
-      const { id, ...rest } = problem;
-      return rest;
-    });
-
     console.log('Clearing existing problems...');
     await Problem.deleteMany({});
 
-    console.log(`Inserting ${formattedData.length} problems...`);
-    await Problem.insertMany(formattedData);
+    console.log(`Inserting ${problemData.length} problems...`);
+    await Problem.insertMany(problemData);
 
     console.log('Database seeded successfully!');
     process.exit(0);
